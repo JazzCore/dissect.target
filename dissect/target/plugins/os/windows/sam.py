@@ -212,6 +212,7 @@ SamRecord = TargetRecordDescriptor(
         ("string", "username"),
         ("string", "admincomment"),
         ("string", "usercomment"),
+        ("string", "accountdisabled"),
         ("datetime", "lastlogin"),
         ("datetime", "lastpasswordset"),
         ("datetime", "lastincorrectlogin"),
@@ -385,6 +386,8 @@ class SamPlugin(Plugin):
                     "utf-16-le"
                 )
 
+                u_account_disabled = f.ACB_bits & c_sam.ACB_DISABLED
+
                 u_lmpw = v_data[v.lmpw_ofs : v.lmpw_ofs + v.lmpw_len]
                 u_ntpw = v_data[v.ntpw_ofs : v.ntpw_ofs + v.ntpw_len]
 
@@ -397,6 +400,7 @@ class SamPlugin(Plugin):
                     username=u_username,
                     admincomment=u_admin_comment,
                     usercomment=u_user_comment,
+                    accountdisabled=u_account_disabled,
                     lastlogin=ts.wintimestamp(f.t_last_login),
                     lastpasswordset=ts.wintimestamp(f.t_last_password_set),
                     lastincorrectlogin=ts.wintimestamp(f.t_last_incorrect_login),
